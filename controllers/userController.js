@@ -1,4 +1,4 @@
-const {create, read, readId, update, destroy, signIn ,User} = require('../models/userModel');
+const {User, create, read, readId, update, destroy, signIn} = require('../models/userModel');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 

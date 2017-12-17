@@ -89,4 +89,4 @@ const destroy = (id, callback) => {
 	})
 }
 
-module.exports = {create, read, readId, update, destroy, signIn, User};
+module.exports = {User, create, read, readId, update, destroy, signIn};

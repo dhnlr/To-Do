@@ -16,6 +16,10 @@ const TodoSchema = new Schema({
 		type: String,
 		required: true,
 		default: 'yet'
+	},
+	author: {
+		type: Schema.Types.ObjectId,
+		ref: 'User',
 	}
 })
 
@@ -68,4 +72,4 @@ const destroy = (id, callback) => {
 	})
 }
 
-module.exports = {create, read, readId, update, destroy, Todo};
+module.exports = {Todo, create, read, readId, update, destroy};

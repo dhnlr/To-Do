@@ -1,5 +1,10 @@
+const mongoose = require('mongoose');
+const ObjectId = mongoose.Types.ObjectId; 
+const Todo = require('../models/todoModel.js')
+
 module.exports = (req, res, next) =>{
-	if (req.decoded && req.decoded.role == 'admin') {
+	let todo = Todo.findOne({'author': ObjectId(req.decoded.id)})
+	if (req.decoded && todo) {
 		next()
 	}
 	else {

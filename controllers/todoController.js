@@ -1,4 +1,4 @@
-const {create, read, readId, update, destroy, Todo} = require('../models/todoModel');
+const {Todo, create, read, readId, update, destroy} = require('../models/todoModel');
 
 class TodoController {
 	static getTodo(req, res){
