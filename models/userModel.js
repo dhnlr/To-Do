@@ -7,6 +7,7 @@ const UserSchema = new Schema({
 	username: {
 		type: String,
 		required: true,
+		lowercase: true,
 		validate: {
 			unique: function (value, done){
 				this.model('User').count({ username: value }, function(err, count) {
@@ -58,6 +59,14 @@ const readId = (id, callback) => {
 	})
 }
 
+const signIn = (username, callback) => {
+	User.find({'username': username}, (err, user)=>{
+		if (!err) {
+			callback(user)
+		}
+	})
+}
+
 const update = (id, data, callback) => {
 	User.findOneAndUpdate({'_id': ObjectId(id)}, {$set: data}, {upsert: true, new : true},(error, data)=>{
 		if (!error) {
@@ -80,4 +89,4 @@ const destroy = (id, callback) => {
 	})
 }
 
-module.exports = {create, read, readId, update, destroy, User};
+module.exports = {create, read, readId, update, destroy, signIn, User};

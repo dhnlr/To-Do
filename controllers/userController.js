@@ -1,4 +1,6 @@
-const {create, read, readId, update, destroy, User} = require('../models/userModel');
+const {create, read, readId, update, destroy, signIn ,User} = require('../models/userModel');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 
 class UserController {
 	static getUser(req, res){
@@ -31,10 +33,38 @@ class UserController {
 			}
 		})
 	}
+	static signIn(req, res){
+		signIn(req.body.username, (user)=>{
+			if (!user) {
+				res.status(403).json({
+					message: 'User not found',
+				})
+			}
+			if (bcrypt.compareSync(req.body.password, user[0].password)) {
+				let payload = {
+					id: user[0].id,
+					name : user[0].username,
+					role : user[0].role,
+				}
+
+				jwt.sign(payload, process.env.SECRET_KEY, (error, token)=>{
+					if (error) {
+						res.status(403).json({message: 'User and password wrong', error: error})
+					} else {
+						req.headers.token = token;
+						res.status(200).json({
+							message: 'User signed in successfully',
+							data: token,
+						})
+					}
+				})
+			}
+		})
+	}
 	static createUser(req,res){
 		let data = {
 			username: req.body.username,
-			password: req.body.password
+			password: bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(10)),
 		}
 		create(data, (error)=>{
 			if (!error) {
