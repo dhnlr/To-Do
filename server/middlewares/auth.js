@@ -8,7 +8,7 @@ module.exports = (req, res, next) =>{
 		}
 		else {
 			res.status(403).json({
-				message: 'User not authentic'
+				message: 'User not authenticate'
 			})
 		}
 	})

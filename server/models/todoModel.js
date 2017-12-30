@@ -8,14 +8,9 @@ const TodoSchema = new Schema({
 		type: String,
 		required: true,
 	},
-	description: {
-		type: String,
-		required: true,
-	},
 	status: {
-		type: String,
-		required: true,
-		default: 'yet'
+		type: Boolean,
+        default: false
 	},
 	author: {
 		type: Schema.Types.ObjectId,
@@ -27,9 +22,9 @@ const Todo = mongoose.model('Todo', TodoSchema);
 
 const create = (data, callback) => {
 	Todo.create(data, (error, data)=>{
-		if (!error) callback(null)
+		if (!error) callback(null, data)
 		else {
-			callback(error)
+			callback(error, null)
 		}
 	})
 }
@@ -47,6 +42,24 @@ const readId = (id, callback) => {
 		if (!err) {
 			callback(todo)
 		}
+	})
+}
+
+const readAuth = (auth, callback) => {
+	Todo.find({'author': ObjectId(auth)}, (err, todo) => {
+		if (!err) {
+			callback(todo)
+		}
+	})
+}
+
+const complete = (id, callback) => {
+	Todo.findOne({'_id': ObjectId(id)}, (err, todoFind)=>{
+		Todo.findOneAndUpdate({'_id': ObjectId(id)}, {$set: {status: !todoFind.status}}, {upsert: true, new : true},(error, data)=>{
+			if(!error){
+				callback(null)
+			}
+		})
 	})
 }
 
@@ -72,4 +85,4 @@ const destroy = (id, callback) => {
 	})
 }
 
-module.exports = {Todo, create, read, readId, update, destroy};
+module.exports = {Todo, create, read, readId, readAuth, complete, update, destroy};

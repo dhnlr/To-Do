@@ -1,44 +1,25 @@
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId; 
 const Schema = mongoose.Schema;
+const uniqueValidator = require('mongoose-unique-validator');
 mongoose.connect('mongodb://localhost:27017/todo');
 
 const UserSchema = new Schema({
-	username: {
+	email: {
 		type: String,
 		required: true,
-		lowercase: true,
-		validate: {
-			unique: function (value, done){
-				this.model('User').count({ username: value }, function(err, count) {
-			        if (err) {
-			            return done(err);
-			        } 
-			        // If `count` is greater than zero, "invalidate"
-			        done(!count);
-				});
-			}, 
-			message: `${value} existed`
-		}
-	},
-	password: {
-		type: String,
-		required: true,
-	},
-	role: {
-		type: String,
-		required: true,
-		default: 'User'
+		unique: true,
 	}
 })
+UserSchema.plugin(uniqueValidator, { message: 'Error, {VALUE} already used.' });
 
 const User = mongoose.model('User', UserSchema);
 
 const create = (data, callback) => {
 	User.create(data, (error, data)=>{
-		if (!error) callback(null)
+		if (!error) callback(null, data)
 		else {
-			callback(error)
+			callback(error, null)
 		}
 	})
 }
@@ -52,17 +33,20 @@ const read = (callback) =>{
 }
 
 const readId = (id, callback) => {
-	User.find({'_id': ObjectId(id)}, (err, user)=>{
+	User.findOne({'_id': ObjectId(id)}, (err, user)=>{
 		if (!err) {
 			callback(user)
 		}
 	})
 }
 
-const signIn = (username, callback) => {
-	User.find({'username': username}, (err, user)=>{
+const signInEmail = (email, callback) => {
+	User.findOne({'email': email}, (err, user)=>{
 		if (!err) {
 			callback(user)
+		}
+		else {
+			console.log(err)
 		}
 	})
 }
@@ -89,4 +73,4 @@ const destroy = (id, callback) => {
 	})
 }
 
-module.exports = {User, create, read, readId, update, destroy, signIn};
+module.exports = {User, create, read, readId, update, destroy, signInEmail};
