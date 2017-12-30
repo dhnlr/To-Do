@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId; 
 const Schema = mongoose.Schema;
-mongoose.connect('mongodb://localhost:27017/todo');
 
 const TodoSchema = new Schema({
 	title: {

@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId; 
 const Schema = mongoose.Schema;
 const uniqueValidator = require('mongoose-unique-validator');
-mongoose.connect('mongodb://localhost:27017/todo');
 
 const UserSchema = new Schema({
 	email: {
