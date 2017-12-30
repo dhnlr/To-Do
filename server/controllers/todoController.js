@@ -1,12 +1,12 @@
-const {create, read, readId, update, destroy, Todo} = require('../models/todoModel');
+const {Todo, create, read, readId, readAuth, complete, update, destroy} = require('../models/todoModel');
 
 class TodoController {
 	static getTodo(req, res){
-		read(todos=>{
-			if (todos) {
+		readAuth(req.decoded.userId, (todo) =>{
+			if (todo) {
 				res.status(200).json({
 					message: 'Todos summoned',
-					data: todos,
+					data: todo,
 				})
 			}
 			else {
@@ -33,14 +33,14 @@ class TodoController {
 	}
 	static createTodo(req,res){
 		let data = {
-			todoname: req.body.todoname,
-			password: req.body.password
+			title: req.body.title,
+			author:req.decoded.userId
 		}
-		create(data, (error)=>{
+		create(data, (error, dataS)=>{
 			if (!error) {
 				res.status(200).json({
 					message: 'Todos created',
-					data: data,
+					data: dataS,
 				})
 			}
 			else {
@@ -54,8 +54,7 @@ class TodoController {
 	static updateTodo(req,res){
 		readId(req.params.id, (todo)=>{
 			let data = {
-				todoname: req.body.todoname || todo[0].todoname,
-				password: req.body.password || todo[0].password,
+				title: req.body.title || todo[0].title
 			}
 			update(req.params.id, data, (error)=>{
 				if (!error) {
@@ -71,6 +70,22 @@ class TodoController {
 					})
 				}
 			})
+		})
+	}
+	static completeTodo(req,res){
+		complete(req.params.id, (error, data)=>{
+			if (!error) {
+				res.status(200).json({
+					message: 'Todos completed',
+					data: data,
+				})
+			}
+			else {
+				res.status(400).json({
+					message: 'Error occured',
+					data: error
+				})
+			}
 		})
 	}
 	static deleteTodo(req,res){
