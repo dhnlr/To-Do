@@ -33,7 +33,7 @@ export default {
           localStorage.userId = response.authResponse.userID
           axios({
             method: 'post',
-            url:`http://localhost:3000/signin`, 
+            url:`http://35.199.168.46/signin`, 
             data: {
               userId: response.authResponse.userID,
               accessToken: response.authResponse.accessToken

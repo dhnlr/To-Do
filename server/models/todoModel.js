@@ -37,7 +37,7 @@ const read = (callback) =>{
 }
 
 const readId = (id, callback) => {
-	Todo.find({'_id': ObjectId(id)}, (err, todo)=>{
+	Todo.find({'_id': id}, (err, todo)=>{
 		if (!err) {
 			callback(todo)
 		}
@@ -45,7 +45,7 @@ const readId = (id, callback) => {
 }
 
 const readAuth = (auth, callback) => {
-	Todo.find({'author': ObjectId(auth)}, (err, todo) => {
+	Todo.find({'author': auth}, (err, todo) => {
 		if (!err) {
 			callback(todo)
 		}
@@ -53,7 +53,7 @@ const readAuth = (auth, callback) => {
 }
 
 const complete = (id, callback) => {
-	Todo.findOne({'_id': ObjectId(id)}, (err, todoFind)=>{
+	Todo.findOne({'_id': id}, (err, todoFind)=>{
 		Todo.findOneAndUpdate({'_id': ObjectId(id)}, {$set: {status: !todoFind.status}}, {upsert: true, new : true},(error, data)=>{
 			if(!error){
 				callback(null)
@@ -63,7 +63,7 @@ const complete = (id, callback) => {
 }
 
 const update = (id, data, callback) => {
-	Todo.findOneAndUpdate({'_id': ObjectId(id)}, {$set: data}, {upsert: true, new : true},(error, data)=>{
+	Todo.findOneAndUpdate({'_id': id}, {$set: data}, {upsert: true, new : true},(error, data)=>{
 		if (!error) {
 			callback(null)
 		}
@@ -74,7 +74,7 @@ const update = (id, data, callback) => {
 }
 
 const destroy = (id, callback) => {
-	Todo.remove({'_id': ObjectId(id)}, (error) => {
+	Todo.remove({'_id': id}, (error) => {
 		if (!error) {
 			callback(null)
 		}

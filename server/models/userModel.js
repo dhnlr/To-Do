@@ -40,7 +40,7 @@ const readId = (id, callback) => {
 }
 
 const signInEmail = (email, callback) => {
-	User.findOne({'email': email}, (err, user)=>{
+	User.find({'email': email}, (err, user)=>{
 		if (!err) {
 			callback(user)
 		}
